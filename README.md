@@ -1,59 +1,140 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Hospital Management System - Lead Management & Payment System
+A Laravel-based hospital appointment booking system with CCAvenue payment gateway integration for managing patient consultations and advance payments.
+🚀 Features
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Appointment Management: Book health consultation appointments with patient details
+Payment Integration: CCAvenue payment gateway integration for advance payments
+Payment Callbacks: Secure payment callback handling and status updates
+Status Tracking: Track appointment and payment statuses in real-time
+API-based: RESTful API endpoints for seamless integration
+Error Handling: Comprehensive error handling and logging
+Security: Environment-based configuration for sensitive credentials
 
-## About Laravel
+📋 Prerequisites
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+PHP >= 8.1
+Composer
+MySQL/PostgreSQL
+Laravel 10.x or higher
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+🛠️ Installation & Setup
+1. Clone the Repository
+bashgit clone https://github.com/Ashutoshxo/Hospital-management.git
+cd Hospital-management
+2. Install Dependencies
+bashcomposer install
+3. Environment Configuration
+bashcp .env.example .env
+Update the .env file with your database credentials:
+envDB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=hospital_system
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# CCAvenue Configuration
+CCAVENUE_MERCHANT_ID=your_merchant_id
+CCAVENUE_ACCESS_CODE=your_access_code
+CCAVENUE_WORKING_KEY=your_working_key
+CCAVENUE_REDIRECT_URL=http://localhost:8000/api/payments/callback
+CCAVENUE_CANCEL_URL=http://localhost:8000/payment/cancelled
+4. Generate Application Key
+bashphp artisan key:generate
+5. Run Migrations
+bashphp artisan migrate
+6. Start the Development Server
+bashphp artisan serve
+The application will be available at http://localhost:8000
+📡 API Endpoints
+1. Create Appointment
+POST /api/appointments
+Request Body:
+json{
+    "patient_name": "John Doe",
+    "patient_email": "john@example.com",
+    "patient_phone": "9876543210",
+    "consultant_type": "Cardiologist",
+    "appointment_date": "2025-12-01 10:00:00",
+    "consultation_fee": 500
+}
+Response: 201 Created
+json{
+    "id": 1,
+    "patient_name": "John Doe",
+    "patient_email": "john@example.com",
+    "status": "pending",
+    "created_at": "2025-11-25T10:00:00.000000Z"
+}
+2. Initiate Payment
+POST /api/appointments/{id}/initiate-payment
+Response: 200 OK
+json{
+    "payment_url": "https://ccavenue.com/payment",
+    "payment_id": 1,
+    "amount": 500,
+    "order_id": "APT-1"
+}
+3. Payment Callback (CCAvenue)
+POST /api/payments/callback
+Request Body:
+json{
+    "transaction_id": "TXN123456789",
+    "payment_status": "success",
+    "amount": 500,
+    "order_id": "APT-1"
+}
+Response: 200 OK
+json{
+    "message": "Payment processed successfully",
+    "appointment_status": "confirmed"
+}
+🗄️ Database Schema
+Appointments Table
 
-## Learning Laravel
+id - Primary key
+patient_name - Patient's full name
+patient_email - Patient's email
+patient_phone - Contact number
+consultant_type - Type of consultant
+appointment_date - Scheduled appointment date
+consultation_fee - Fee amount
+status - pending/confirmed/cancelled
+created_at, updated_at - Timestamps
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Payments Table
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+id - Primary key
+appointment_id - Foreign key to appointments
+amount - Payment amount
+ccavenue_transaction_id - CCAvenue transaction ID
+payment_status - initiated/success/failed
+payment_date - Payment completion date
+created_at, updated_at - Timestamps
 
-## Laravel Sponsors
+🔒 Security Considerations
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Environment Variables: All sensitive credentials stored in .env file
+Payment Security: CCAvenue checksum validation implemented
+Input Validation: Laravel validation rules for all API inputs
+Error Logging: Comprehensive logging for debugging and auditing
 
-### Premium Partners
+☁️ AWS Deployment Strategy
+EC2 Deployment
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Deploy on EC2 instances with Application Load Balancer
+Use Auto Scaling Groups for high availability
+Store .env in AWS Systems Manager Parameter Store or Secrets Manager
 
-## Contributing
+Database
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Use Amazon RDS (MySQL/PostgreSQL) for managed database
+Enable automated backups with point-in-time recovery
+Set up read replicas for scalability
 
-## Code of Conduct
+File Storage
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Use Amazon S3 for document storage
+Configure IAM roles for secure access
+Enable versioning and lifecycle policies
