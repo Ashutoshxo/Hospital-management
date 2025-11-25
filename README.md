@@ -1,6 +1,7 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-Hospital Management System - Lead Management & Payment System
+Hospital Management System
+Lead Management & Payment System
 A Laravel-based hospital appointment booking system with CCAvenue payment gateway integration for managing patient consultations and advance payments.
+
 🚀 Features
 
 Appointment Management: Book health consultation appointments with patient details
@@ -11,12 +12,14 @@ API-based: RESTful API endpoints for seamless integration
 Error Handling: Comprehensive error handling and logging
 Security: Environment-based configuration for sensitive credentials
 
+
 📋 Prerequisites
 
 PHP >= 8.1
 Composer
 MySQL/PostgreSQL
 Laravel 10.x or higher
+
 
 🛠️ Installation & Setup
 1. Clone the Repository
@@ -47,6 +50,7 @@ bashphp artisan migrate
 6. Start the Development Server
 bashphp artisan serve
 The application will be available at http://localhost:8000
+
 📡 API Endpoints
 1. Create Appointment
 POST /api/appointments
@@ -90,28 +94,12 @@ json{
     "message": "Payment processed successfully",
     "appointment_status": "confirmed"
 }
+
 🗄️ Database Schema
 Appointments Table
-
-id - Primary key
-patient_name - Patient's full name
-patient_email - Patient's email
-patient_phone - Contact number
-consultant_type - Type of consultant
-appointment_date - Scheduled appointment date
-consultation_fee - Fee amount
-status - pending/confirmed/cancelled
-created_at, updated_at - Timestamps
-
+ColumnTypeDescriptionidPrimary keyUnique identifierpatient_nameStringPatient's full namepatient_emailStringPatient's emailpatient_phoneStringContact numberconsultant_typeStringType of consultantappointment_dateDateTimeScheduled appointment dateconsultation_feeDecimalFee amountstatusEnumpending/confirmed/cancelledcreated_at, updated_atTimestampsRecord timestamps
 Payments Table
-
-id - Primary key
-appointment_id - Foreign key to appointments
-amount - Payment amount
-ccavenue_transaction_id - CCAvenue transaction ID
-payment_status - initiated/success/failed
-payment_date - Payment completion date
-created_at, updated_at - Timestamps
+ColumnTypeDescriptionidPrimary keyUnique identifierappointment_idForeign keyReference to appointmentsamountDecimalPayment amountccavenue_transaction_idStringCCAvenue transaction IDpayment_statusEnuminitiated/success/failedpayment_dateDateTimePayment completion datecreated_at, updated_atTimestampsRecord timestamps
 
 🔒 Security Considerations
 
@@ -119,6 +107,7 @@ Environment Variables: All sensitive credentials stored in .env file
 Payment Security: CCAvenue checksum validation implemented
 Input Validation: Laravel validation rules for all API inputs
 Error Logging: Comprehensive logging for debugging and auditing
+
 
 ☁️ AWS Deployment Strategy
 EC2 Deployment
